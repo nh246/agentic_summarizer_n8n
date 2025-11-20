@@ -1,0 +1,405 @@
+{
+  "name": "Module 16 AI Agent Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-article",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        -48
+      ],
+      "webhookId": "a-random-uuid-placeholder",
+      "id": "00cc3b76-4590-4b45-8d83-262770a934ec"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.article_url }}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "name": "Fetch Article (HTTP Request)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -752,
+        -256
+      ],
+      "id": "42a549d4-f38e-4b08-a15b-1e8927ab187f",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "extractionValues": {
+          "values": [
+            {
+              "key": "article_text",
+              "cssSelector": "body"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Extract Text",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        -288
+      ],
+      "id": "e69a97be-b88c-40fa-a762-0df9ef6b8659"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1ujD5yj_fRcLNMXAxn9bMQb0My5mYB6Kqfk3syonrrbg/edit",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "finishReason",
+              "displayName": "finishReason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "index",
+              "displayName": "index",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "body",
+              "displayName": "body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        320,
+        -240
+      ],
+      "id": "7556de0b-16e4-4856-bef6-ad35a2ae76aa",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "G0a9vYfu9cnvuQeb",
+          "name": "Google Sheets account 3"
+        }
+      },
+      "notes": "Columns: session_id, article_url, summary, insights, email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "Your Article Summary & Insights",
+        "emailType": "text",
+        "message": "=Here is the summary for your article:\n\nSummary:\n{{ $json.summary }}\n\n\n______________________________________________________________________________\nInsights:\n{{ $json.insights }}\n\nOriginal URL: {{ $json.article_url }}",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        192,
+        48
+      ],
+      "id": "52fd297c-b67c-4a8a-9b1f-73ba8d4da255",
+      "webhookId": "24db4f4e-5152-44c3-a1fc-d60dde05c378",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "IHc9m16sFV0IhIx2",
+          "name": "Gmail account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an expert summarization bot. Your only task is to take the provided text and condense it into a concise, three-sentence summary. Do not add any introductory or concluding remarks. Just output the summary.",
+              "role": "model"
+            },
+            {
+              "content": "={{ $json.article_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -288
+      ],
+      "id": "28f09727-9276-4e97-880e-0ad9592b4746",
+      "name": "ai summarizer",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "QlP7LQt7I6jfAHtS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an expert analyst. Your task is to analyze the provided text and identify the 5 most important, actionable, or surprising insights. Present the output ONLY as a markdown unordered list (bullet points). Do not include any introductory or concluding text."
+            },
+            {
+              "content": "={{ $json.article_text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        -48
+      ],
+      "id": "51e0ec12-69f7-4893-9bdd-a923abdf999b",
+      "name": "ai insites",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "XPD0c3e3DSXsZhzm",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9ae81dc4-5d0a-4ff4-bda4-97e234ff097c",
+              "name": "body.session_id",
+              "value": "={{ $('Webhook').item.json.body.session_id }}",
+              "type": "string"
+            },
+            {
+              "id": "15f04335-bcd5-464b-973c-f22ecb2747de",
+              "name": "=article_url",
+              "value": "={{ $('Webhook').item.json.body.article_url }}",
+              "type": "string"
+            },
+            {
+              "id": "6bbe2061-85de-4134-af0f-3cb68eccb732",
+              "name": "email",
+              "value": "={{ $('Webhook').item.json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "c31f6cd7-1e33-48be-a9db-74d52a5fe96c",
+              "name": "=summary",
+              "value": "={{ $node[\"ai summarizer\"].json.content.parts[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "10a4257d-6052-4893-b232-b3bd95d56342",
+              "name": "insights",
+              "value": "={{ $node[\"ai insites\"].json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        32,
+        -112
+      ],
+      "id": "d71065e6-bdf9-4107-9cc2-dfd6bc6cc2ad",
+      "name": "set note"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        0,
+        -352
+      ],
+      "id": "26086940-c2f0-47c3-9c57-1f904057cdec",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Article (HTTP Request)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Article (HTTP Request)": {
+      "main": [
+        [
+          {
+            "node": "Extract Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Text": {
+      "main": [
+        [
+          {
+            "node": "ai insites",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ai summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ai summarizer": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ai insites": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "set note": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "set note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "97652232-abec-429c-9cc3-dc0d8bfa5d6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36c102af0755fa1153b6ffb52f921503a841b662c4fcee99e46ed96523df7b5a"
+  },
+  "id": "X3ffNnp8Q0FP6ZAy",
+  "tags": []
+}

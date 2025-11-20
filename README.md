@@ -4,70 +4,82 @@
 
 **URL**: https://lovable.dev/projects/7f417ea5-bebc-4320-bb16-c4a519825299
 
-## How can I edit this code?
+# Agentic Summarizer (n8n + React)
 
-There are several ways of editing your application.
+A lightweight frontend built with Vite + React + TypeScript that works together with n8n workflows to provide fast, agentic article summarization.
 
-**Use Lovable**
+Quick links
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7f417ea5-bebc-4320-bb16-c4a519825299) and start prompting.
+- **Google Sheet (data / project notes)**: https://docs.google.com/spreadsheets/d/1ujD5yj_fRcLNMXAxn9bMQb0My5mYB6Kqfk3syonrrbg/edit?usp=sharing
+- **Backend (API)**: https://agentic-summarizer-n8n.onrender.com/
+- **Frontend (live demo)**: https://summarize-it-fast.lovable.app/
+- **Demo video**: https://drive.google.com/file/d/18asUjky2iduyLISVIyTOSSAeNpS26ujb/view?usp=sharing
+- **n8n workflows folder (GitHub)**: https://github.com/nh246/agentic_summarizer_n8n/tree/main/n8n
 
-Changes made via Lovable will be committed automatically to this repo.
+Project structure (important files)
 
-**Use your preferred IDE**
+- `package.json` - dependencies and scripts
+- `vite.config.ts` - Vite config
+- `src/` - React app source
+	- `src/pages/` - top-level pages (`Index.tsx`, `NotFound.tsx`)
+	- `src/components/ui/` - UI building blocks (shadcn-style)
+	- `src/hooks/` - custom hooks
+	- `src/lib/utils.ts` - utility helpers
+- `public/` - static assets
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Tech stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Vite
+- React + TypeScript
+- Tailwind CSS
+- shadcn/ui components
+- n8n (for backend/workflows)
 
-Follow these steps:
+Quick start (local development)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+1. Clone this repository:
+
+```
 git clone <YOUR_GIT_URL>
+cd agentic_summarizer_n8n
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Run the dev server:
+
+```
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Open the app in your browser (typically `http://localhost:5173`).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Notes about the n8n workflows
 
-**Use GitHub Codespaces**
+- The project integrates with n8n for automation and backend logic. Look for an `n8n/` folder in the repository (or view it on GitHub):
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+	- Local folder path: `./n8n/`
+	- GitHub folder: https://github.com/nh246/agentic_summarizer_n8n/tree/main/n8n
 
-## What technologies are used for this project?
+- If you want to run the workflows locally with n8n, import the JSON files from the `n8n/` folder into an n8n instance (desktop or Docker). See n8n docs for import instructions: https://docs.n8n.io/getting-started/installation/
 
-This project is built with:
+Environment / deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- The frontend is a static app and can be deployed to any static hosting (Vercel, Netlify, Render, Lovable, etc.). A running demo is available at the frontend link above.
+- The backend/API used by the app is available at the URL above. If you run your own backend, set the `BACKEND_URL` environment variable or update the frontend config where applicable.
 
-## How can I deploy this project?
+Contributing
 
-Simply open [Lovable](https://lovable.dev/projects/7f417ea5-bebc-4320-bb16-c4a519825299) and click on Share -> Publish.
+- Create a feature branch and open a pull request against `main`.
+- Please include a brief description and screenshots (if UI changes).
 
-## Can I connect a custom domain to my Lovable project?
+Contact / resources
 
-Yes, you can!
+- Demo video: https://drive.google.com/file/d/18asUjky2iduyLISVIyTOSSAeNpS26ujb/view?usp=sharing
+- Google Sheet (project notes): https://docs.google.com/spreadsheets/d/1ujD5yj_fRcLNMXAxn9bMQb0My5mYB6Kqfk3syonrrbg/edit?usp=sharing
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
