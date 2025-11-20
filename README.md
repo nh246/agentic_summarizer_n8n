@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Welcome to Article Summarizer project
 
 ## Project info
 
@@ -14,7 +14,7 @@ Quick links
 - **Backend (API)**: https://agentic-summarizer-n8n.onrender.com/
 - **Frontend (live demo)**: https://summarize-it-fast.lovable.app/
 - **Demo video**: https://drive.google.com/file/d/18asUjky2iduyLISVIyTOSSAeNpS26ujb/view?usp=sharing
-- **n8n workflows folder (GitHub)**: https://github.com/nh246/agentic_summarizer_n8n/tree/main/n8n
+- **n8n workflows folder (GitHub)**: https://github.com/nh246/agentic_summarizer_n8n/tree/main/n8n_file
 
 Project structure (important files)
 
