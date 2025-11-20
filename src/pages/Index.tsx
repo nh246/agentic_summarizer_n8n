@@ -40,7 +40,7 @@ const Index = () => {
 
     try {
       // Replace with your actual FastAPI endpoint
-      await fetch("https://your-fastapi-url.onrender.com/submit", {
+      await fetch("https://ai-agent-nh246.onrender.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
